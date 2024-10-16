@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -33,6 +35,31 @@ public class Main {
         }
       });
       System.out.println(values);
+
+      try (var stringStream = Files.lines(path)) {
+        var results = stringStream
+          .skip(1)
+          .map(p::matcher)
+          .filter(Matcher::matches)
+          .map(m -> m.group(3).trim())
+          .distinct()
+          .sorted()
+          .toArray(String[]::new);  // generator
+        System.out.println(Arrays.toString(results));
+        System.out.println();
+      }
+
+      try (var stringStream = Files.lines(path)) {
+        var results = stringStream
+          .skip(1)
+          .map(p::matcher)
+          .filter(Matcher::matches)
+          .collect(Collectors.groupingBy(m -> m.group(3).trim(), Collectors.counting()));
+
+        System.out.println("Count by Departement");
+        System.out.println("---------------------------");
+        results.forEach((k, v) -> System.out.println(k + " " + v)); // entrySet().forEach
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
