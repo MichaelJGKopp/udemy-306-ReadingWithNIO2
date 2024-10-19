@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -28,7 +29,8 @@ public class Challenge {
       System.out.println("--------");
       result.entrySet()
           .stream()
-          .sorted(Comparator.comparing(e -> -e.getValue()))
+//        .sorted(Comparator.comparing((Map.Entry<String, Long> entry) -> entry.getValue()).reversed())
+          .sorted(Comparator.<Map.Entry<String, Long>>comparingLong(Map.Entry::getValue).reversed())
           .limit(5)
           .forEach(System.out::println);
     } catch (IOException e) {
