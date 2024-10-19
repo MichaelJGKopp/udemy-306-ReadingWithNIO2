@@ -18,7 +18,7 @@ public class Challenge {
 
     try (var stream = Files.lines(path)) {
 
-      Pattern p = Pattern.compile("[A-Za-z]{6,}");
+      Pattern p = Pattern.compile("[\\w-]{6,}");
       var result = stream
         .flatMap(line -> {
           var matcher = p.matcher(line);
@@ -31,7 +31,7 @@ public class Challenge {
           .stream()
 //        .sorted(Comparator.comparing((Map.Entry<String, Long> entry) -> entry.getValue()).reversed())
           .sorted(Comparator.<Map.Entry<String, Long>>comparingLong(Map.Entry::getValue).reversed())
-          .limit(5)
+          .limit(10)
           .forEach(System.out::println);
     } catch (IOException e) {
       throw new RuntimeException(e);
